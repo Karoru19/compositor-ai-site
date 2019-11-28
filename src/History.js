@@ -20,6 +20,12 @@ import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 const useStyles = makeStyles(theme => ({
     root: {
+        flexGrow: 1,
+        maxWidth: 752,
+        margin: theme.spacing(8,4),
+    },
+    demo: {
+        backgroundColor: theme.palette.background.paper,
     },
     image: {
         backgroundImage: 'url(https://source.unsplash.com/random)',
@@ -28,6 +34,15 @@ const useStyles = makeStyles(theme => ({
             theme.palette.type === 'dark' ? theme.palette.grey[900] : theme.palette.grey[50],
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+    },
+    title: {
+        margin: theme.spacing(4, 0, 2),
+    },
+    commandButtons: {
+        display: 'flex',
+    },
+    dialogContent:{
+        padding: theme.spacing(20,0,0,0)
     },
     paper: {
         margin: theme.spacing(8, 4),
@@ -70,9 +85,9 @@ export default function History() {
     };
 
     return (
-        <Grid container component="main" className={classes.root}>
-            <Typography>
-                Your songs
+        <Container component="main" >
+            <Typography component="h1" variant="h5">
+                Your songs:
             </Typography>
             <Grid item xs={12} md={12}>
                 <div className={classes.demo}>
@@ -107,7 +122,7 @@ export default function History() {
                     </List>
                 </div>
             </Grid>
-        </Grid>
+        </Container>
     );
 }
 

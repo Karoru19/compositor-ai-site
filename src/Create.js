@@ -100,7 +100,7 @@ export default function Create() {
 
     return (
         <Container component="main">
-            <Typography>
+            <Typography component="h1" variant="h5">
                 Choose songs to mix:
             </Typography>
             <Grid item xs={12} md={12}>
