@@ -1,0 +1,163 @@
+.login {
+    font-family: "proxima-nova";
+    padding: 0;
+    margin: 0;
+}
+
+.login * {
+    box-sizing: border-box;
+    font-family: "proxima-nova", helvetica;
+}
+
+.login br.only-mobile {
+    display: none;
+}
+
+.login .logo.registration-message {
+    margin-bottom: 0;
+}
+
+.login a, .login a:visited {
+    text-decoration: underline;
+    color: inherit;
+}
+
+.login ul.notice {
+    margin: 0;
+    border: 0;
+    width: 100%;
+    text-align: center;
+    list-style-position: inside;
+    list-style: none;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 10px;
+}
+
+.login ul.notice.errors {
+    background-color: #EDE04D;
+    color: #212200;
+}
+
+.login ul.notice.success {
+    background-color: #15CD72;
+    color: white;
+}
+
+.login ul.notice li {
+    padding: 5px 0;
+}
+
+.login p.registration-message {
+    font-size: 22px;
+    line-height: 28px;
+    font-weight: 400;
+    text-align: center;
+    color: white;
+    margin: 15px 0 40px;
+}
+
+.login .vertical-form {
+    margin: 0 auto;
+    width: 470px;
+    padding: 40px;
+    border-radius: 3px;
+    background: white;
+}
+
+.login .vertical-form legend {
+    text-align: center;
+    font-weight: 300;
+    color: #444;
+    margin: 0 auto 45px;
+    font-size: 35px;
+    line-height: 38px;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.login .vertical-form legend:after {
+    display: none;
+}
+
+.login .vertical-form ::-webkit-input-placeholder {
+    color: #afafaf;
+    font-size: 17px;
+}
+
+
+.login .vertical-form input[type='text']:focus, .login .vertical-form input[type='email']:focus, .login .vertical-form input[type='password']:focus, .login .vertical-form input[type='number']:focus, .login .vertical-form input[type='submit']:focus {
+    border-color: #E7E7E7;
+    box-shadow: none;
+}
+
+.login .vertical-form input[type='submit'] {
+    color: white;
+    background: #15CD72;
+    border: 0;
+    font-weight: 600;
+    font-size: 17px;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 0;
+    height: auto;
+    -webkit-appearance: none;
+}
+
+.login .vertical-form input:hover[type='submit'] {
+    background-color: #0CB863;
+    -webkit-transition: background 0.1s;
+    -moz-transition: background 0.1s;
+    -o-transition: background 0.1s;
+    transition: background 0.1s;
+}
+
+.login .vertical-form p {
+    font-size: 17px;
+    line-height: 1.5;
+    text-align: center;
+    margin: 0;
+    margin-top: 10px;
+    color: #666;
+}
+
+.login .vertical-form p a {
+    color: #0069ff;
+    text-decoration: none;
+}
+
+.login .vertical-form.sign-in, .login .vertical-form.register {
+    padding-bottom: 20px;
+}
+
+.login .vertical-form.sign-in p, .login .vertical-form.register p {
+    padding-top: 8px;
+}
+
+.login .vertical-form.tfa-form legend, .login .vertical-form.verify-form legend {
+    margin-bottom: 15px;
+}
+
+.login .vertical-form.tfa-form + .footer p, .login .vertical-form.verify-form + .footer p {
+    margin-bottom: 5px;
+}
+
+.login .footer {
+    text-align: center;
+    color: white;
+    margin: 20px auto;
+}
+
+.login .footer a {
+    font-weight: 600;
+    border: 0;
+    padding: 0;
+}
+
+.login .footer a:hover {
+    color: #E7F1F9;
+}
+
+.login .footer p {
+    margin-bottom: 40px;
+}
