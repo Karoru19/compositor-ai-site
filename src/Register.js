@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -8,7 +8,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import 'typeface-roboto';
 
@@ -32,72 +32,131 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function Register() {
-    const classes = useStyles();
+export default class Register extends Component {
 
-    return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Typography component="h1" variant="h5">
-                    Sign up
-                </Typography>
-                <form className={classes.form} noValidate>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="repassword"
-                                label="Confirm Password"
-                                type="repassword"
-                                id="repassword"
-                                autoComplete="current-password"
-                            />
-                        </Grid>
-                    </Grid>
-                    <Button
-                        type="submit"
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            emailValue: '',
+            passwordValue: '',
+            repasswordValue: ''
+        };
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(fieldName, event) {
+        this.setState({[fieldName]: event.target.value});
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+
+        if (this.state.passwordValue !== this.state.repasswordValue){
+            alert('Type correct password');
+            this.setState({passwordValue:''});
+            this.setState({repasswordValue:''});
+        }
+
+        return fetch('http://localhost:52070/api/register', {
+            method: 'POST',
+            mode: 'CORS',
+            body: JSON.stringify({
+                email:this.state.emailValue,
+                password:this.state.passwordValue
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => {
+            return res;
+        }).catch(err => err);
+    }
+
+    render() {
+        return (
+            <Container component="main" maxWidth="xs">
+                <CssBaseline/>
+                <RegisterDiv handleSubmitFunc={this.handleSubmit}
+                             handleValueChangeFunc={this.handleChange}
+                             password={this.state.passwordValue}
+                             email={this.state.emailValue}
+                             repassword={this.state.repasswordValue}
+                />
+            </Container>
+        );
+    }
+}
+
+const RegisterDiv = ({handleSubmitFunc, handleValueChangeFunc, email, password, repassword}) => {
+    const classes = useStyles();
+    return <div className={classes.paper}>
+        <Typography component="h1" variant="h5">
+            Sign up
+        </Typography>
+        <form className={classes.form} noValidate>
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <TextField
+                        variant="outlined"
+                        required
                         fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                    >
-                        Sign Up
-                    </Button>
-                    <Grid container justify="flex-end">
-                        <Grid item>
-                            <Link href="/login" variant="body2">
-                                Already have an account? Sign in
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </form>
-            </div>
-        </Container>
-    );
+                        id="email"
+                        label="Email Address"
+                        name="email"
+                        value={email}
+                        autoComplete="email"
+                        onChange={event => handleValueChangeFunc("emailValue", event)}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        variant="outlined"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        id="password"
+                        value={password}
+                        autoComplete="current-password"
+                        onChange={event => handleValueChangeFunc("passwordValue", event)}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        variant="outlined"
+                        required
+                        fullWidth
+                        name="repassword"
+                        label="Confirm Password"
+                        type="password"
+                        id="repassword"
+                        value={repassword}
+                        autoComplete="current-password"
+                        onChange={event => handleValueChangeFunc("repasswordValue", event)}
+                    />
+                </Grid>
+            </Grid>
+            <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={handleSubmitFunc}
+            >
+                Sign Up
+            </Button>
+            <Grid container justify="flex-end">
+                <Grid item>
+                    <Link href="/login" variant="body2">
+                        Already have an account? Sign in
+                    </Link>
+                </Grid>
+            </Grid>
+        </form>
+    </div>
 }
