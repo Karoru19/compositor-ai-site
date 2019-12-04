@@ -35,8 +35,6 @@ export default class History extends Component {
             newPause[index] = -1;
         }
 
-        console.log(newPause);
-
         this.setState({pause: newPause});
     };
 
@@ -45,13 +43,12 @@ export default class History extends Component {
     };
 
     deleteSong = index => {
-        var array = [...this.state.songs]; // make a separate copy of the array
-        var arrayIndex = array.indexOf(index)
+        let array = [...this.state.songs]; // make a separate copy of the array
+        let arrayIndex = array.indexOf(index);
         if (arrayIndex !== -1) {
             array.splice(arrayIndex, 1);
             this.setState({songs: array});
         }
-        console.log(this.state.songs);
     };
 
     render() {
