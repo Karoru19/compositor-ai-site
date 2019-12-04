@@ -54,7 +54,7 @@ export default class ManageAccount extends Component {
             this.setState({newPasswordValue: ''});
         }
 
-        return fetch('http://localhost:52070/api/edit', {
+        fetch('http://localhost:52070/api/edit', {
             method: 'POST',
             mode: 'CORS',
             body: JSON.stringify({
