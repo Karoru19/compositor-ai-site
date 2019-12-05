@@ -45,16 +45,6 @@ function App() {
               <Typography variant="h6" className={classes.title}>
                   AI-Composer
               </Typography>
-              <Link to="/">
-                  <Button
-                      aria-controls="customized-menu"
-                      aria-haspopup="true"
-                      variant="contained"
-                      color="primary"
-                  >
-                      Home
-                  </Button>
-              </Link>
               <Link to="/login">
                   <Button
                       aria-controls="customized-menu"
@@ -105,16 +95,6 @@ function App() {
                       History
                   </Button>
               </Link>
-              <Link to="/upload">
-                  <Button
-                      aria-controls="customized-menu"
-                      aria-haspopup="true"
-                      variant="contained"
-                      color="primary"
-                  >
-                      Upload
-                  </Button>
-              </Link>
           </Toolbar>
 
 
@@ -124,7 +104,6 @@ function App() {
                   <Route exact path="/login" component={Login} />
                   <Route path="/register" component={Register} />
                   <Route path="/manage" component={ManageAccount} />
-                  <Route path="/upload" component={Upload} />
                   <Route path="/create" component={Create} />
                   <Route path="/download" component={Download} />
                   <Route path="/history" component={History} />

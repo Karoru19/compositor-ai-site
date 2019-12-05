@@ -31,20 +31,21 @@ export default class Login extends Component {
     }
 
     handleSubmit(event) {
-        event.preventDefault();
-        return fetch('http://localhost:52070/api/login', {
+        console.log("asasd");
+        fetch('http://127.0.0.1:8000/api/login', {
             method: 'POST',
-            mode: 'CORS',
             body: JSON.stringify({
-                email:this.state.emailValue,
+                username:this.state.emailValue,
                 password:this.state.passwordValue
             }),
             headers: {
                 'Content-Type': 'application/json'
             }
         }).then(res => {
-            return res;
-        }).catch(err => err);
+            console.log(res);
+        }).catch(err => {
+            console.log(err);
+        });
     }
 
     render() {
@@ -63,7 +64,7 @@ const LoginDiv = ({handleSubmitFunc, handleValueChangeFunc}) => {
         <Typography component="h1" variant="h5">
             Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <div className={classes.form} noValidate>
             <TextField
                 variant="outlined"
                 margin="normal"
@@ -109,7 +110,7 @@ const LoginDiv = ({handleSubmitFunc, handleValueChangeFunc}) => {
                     </Link>
                 </Grid>
             </Grid>
-        </form>
+        </div>
     </div>
 };
 

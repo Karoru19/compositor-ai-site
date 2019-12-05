@@ -20,9 +20,26 @@ import Container from "@material-ui/core/Container";
 
 export default class History extends Component {
 
+    componentDidMount() {
+        fetch('http://127.0.0.1:8000/api/history', {
+            method: 'POST',
+            body: JSON.stringify({
+                password: this.state.newPasswordValue,
+                confirm_password: this.state.repasswordValue
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => {
+            console.log(res);
+            //this.setState({songs:res});
+            return res;
+        }).catch(err => err);
+    }
+
     state = {
         pause: [-1, -1, -1, -1],
-        songs: [0, 1, 2, 3]
+        songs: []
     };
 
     setPause = index => {

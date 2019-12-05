@@ -60,11 +60,10 @@ export default class Register extends Component {
             this.setState({repasswordValue:''});
         }
 
-        return fetch('http://localhost:52070/api/register', {
+        return fetch('http://127.0.0.1:8000/api/register', {
             method: 'POST',
-            mode: 'CORS',
             body: JSON.stringify({
-                email:this.state.emailValue,
+                username:this.state.emailValue,
                 password:this.state.passwordValue
             }),
             headers: {
