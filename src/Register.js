@@ -60,7 +60,7 @@ export default class Register extends Component {
             this.setState({repasswordValue:''});
         }
 
-        return fetch('http://127.0.0.1:8000/api/register', {
+        fetch('http://127.0.0.1:8000/api/register/', {
             method: 'POST',
             body: JSON.stringify({
                 username:this.state.emailValue,
@@ -70,7 +70,9 @@ export default class Register extends Component {
                 'Content-Type': 'application/json'
             }
         }).then(res => {
-            return res;
+            if (res.ok){
+                this.props.history.push('/login');
+            }
         }).catch(err => err);
     }
 

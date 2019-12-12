@@ -3,10 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="0f8061eb-71ee-4afc-b401-a4cb0013a175" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Create.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Create.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/History.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/History.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Login.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ManageAccount.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ManageAccount.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Register.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Register.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -98,6 +99,8 @@
       <workItem from="1574927084948" duration="1811000" />
       <workItem from="1575373424059" duration="7655000" />
       <workItem from="1575385690217" duration="7728000" />
+      <workItem from="1576081411824" duration="627000" />
+      <workItem from="1576089014239" duration="15202000" />
     </task>
     <servers />
   </component>

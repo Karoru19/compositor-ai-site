@@ -24,6 +24,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import Slider from '@material-ui/core/Slider';
+import DeleteIcon from "@material-ui/icons/Delete";
+import PlayIcon from '@material-ui/icons/PlayCircleFilled';
+import PauseIcon from '@material-ui/icons/PauseCircleFilled';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -44,25 +47,81 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function generate(element) {
-    return [0, 1, 2].map(value =>
-        React.cloneElement(element, {
-            key: value,
-        }),
-    );
-}
-
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default class Create extends Component {
 
+    componentDidMount() {
+        fetch('http://127.0.0.1:8000/api/song/', {
+            method: 'GET'
+        }).then(res => {
+            res.json().then(json=>{
+                console.log(json);
+                this.setState({availableSongs:json});
+                this.setState({songs:json});
+            });
+            //this.setState({songs:res});
+            return res;
+        }).catch(err => err);
+
+        this.state.songs.forEach(song=>{
+            this.state.pause.push(song.id);
+        })
+    }
+    audio = new Audio();
+
     state = {
         addSongOpen: false,
         customizeSongOpen: false,
-        availableSongs: [0,1,2,3,4],
-        addedSongs: []
+        songs:[],
+        availableSongs: [],
+        addedSongs: [],
+        lastAudioIndex: -1,
+        isPlaying: 0,
+        pause:[]
+    };
+
+    setPause = value => {
+
+        const newPause = [...this.state.pause];
+
+        console.log(newPause);
+
+        if (newPause.includes(value.id)) {
+            console.log("pause")
+            newPause.splice(newPause.indexOf(value.id),1);
+            this.audio.pause();
+            this.setState({isPlaying: 0});
+        } else {
+            console.log("play")
+            newPause.push(value.id);
+            console.log(newPause);
+            if (this.state.lastAudioIndex === value.id)
+            {
+                console.log("play last index");
+                this.audio.play();
+                this.setState({isPlaying: 1});
+            }
+            else
+            {
+                console.log("play new");
+                console.log(value.mp3);
+                this.audio.pause();
+                if (this.state.lastAudioIndex !== -1 && this.state.isPlaying === 1)
+                {
+                    console.log("delete last state");
+                    newPause.splice(newPause.indexOf(this.state.lastAudioIndex),1);
+                }
+                this.audio = new Audio(value.mp3);
+                this.audio.play();
+                this.setState({isPlaying: 1});
+                this.setState({lastAudioIndex:value.id});
+            }
+        }
+
+        this.setState({pause: newPause});
     };
 
     addSongHandleClickOpen = () => {
@@ -84,18 +143,55 @@ export default class Create extends Component {
     addSong = (songsArray) => {
         let addedArray = [...this.state.addedSongs]; // make a separate copy of the array
         let availableArray = [...this.state.availableSongs]; // make a separate copy of the array
-        songsArray.forEach((item, index)=>{
+
+        songsArray.forEach((item)=>{
             if (item !== -1)
             {
                 addedArray.push(item);
-                availableArray.splice(index,1);
+                availableArray.splice(availableArray.indexOf(item),1);
             }
         });
         this.setState({addedSongs: addedArray});
         this.setState({availableSongs: availableArray});
-        this.addSongHandleClose();
-    }
 
+        this.addSongHandleClose();
+    };
+
+    deleteSongHandler = (song)=>{
+        let addedArray = [...this.state.addedSongs]; // make a separate copy of the array
+        let availableArray = [...this.state.availableSongs]; // make a separate copy of the array
+
+        addedArray.splice(addedArray.indexOf(song),1);
+        availableArray.push(song);
+
+        this.setState({addedSongs: addedArray});
+        this.setState({availableSongs: availableArray});
+    };
+
+    createSongHandler = ()=>{
+        let addedArray = [...this.state.addedSongs];
+
+        let addedSongsIndexes = [];
+
+        addedArray.forEach(item=>{
+            addedSongsIndexes.push(item.id);
+        });
+
+        fetch('http://127.0.0.1:8000/api/compose/', {
+            method: 'POST',
+            body: JSON.stringify({
+                songs:addedSongsIndexes,
+                name:"song_" + new Date().toISOString()
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => {
+            if (res.ok){
+                this.props.history.push('/download');
+            }
+        }).catch(err => err);
+    };
 
     render() {
         return (
@@ -103,7 +199,7 @@ export default class Create extends Component {
                 <Typography component="h1" variant="h5">
                     Choose songs to mix:
                 </Typography>
-                <CreateDiv addedSongs={this.state.addedSongs} addSongHandleClickOpen={this.addSongHandleClickOpen} customizeSongHandleClickOpen={this.customizeSongHandleClickOpen}/>
+                <CreateDiv createSongHandler={this.createSongHandler} playButtonHandleEvent={this.setPause} pause={this.state.pause} deleteSongHandler={this.deleteSongHandler} addedSongs={this.state.addedSongs} addSongHandleClickOpen={this.addSongHandleClickOpen} customizeSongHandleClickOpen={this.customizeSongHandleClickOpen}/>
                 <SongsListDiv addSongsHandler={this.addSong} addSongOpen={this.state.addSongOpen} addSongHandleClose={this.addSongHandleClose} songs={this.state.availableSongs}/>
                 <CustomizeDiv customizeSongOpen={this.state.customizeSongOpen} customizeSongHandleClose={this.customizeSongHandleClose}/>
             </Container>
@@ -111,7 +207,7 @@ export default class Create extends Component {
     };
 }
 
-const CreateDiv = ({customizeSongHandleClickOpen, addSongHandleClickOpen, addedSongs}) => {
+const CreateDiv = ({createSongHandler, pause, playButtonHandleEvent, deleteSongHandler, customizeSongHandleClickOpen, addSongHandleClickOpen, addedSongs}) => {
     const classes = useStyles();
     const [dense, setDense] = React.useState(false);
     const [secondary, setSecondary] = React.useState(false);
@@ -121,7 +217,7 @@ const CreateDiv = ({customizeSongHandleClickOpen, addSongHandleClickOpen, addedS
                 <div className={classes.demo}>
                     <List dense={dense}>
                         {addedSongs.map(value => {
-                            const labelId = `checkbox-list-label-${value}`;
+                            const labelId = `checkbox-list-label-${value.mp3}`;
 
                             return (
                                 <ListItem key={labelId}>
@@ -131,9 +227,18 @@ const CreateDiv = ({customizeSongHandleClickOpen, addSongHandleClickOpen, addedS
                                         </Avatar>
                                     </ListItemAvatar>
                                     <ListItemText
-                                        primary={`Song ${value + 1}`}
-                                        secondary={secondary ? 'Secondary text' : null}
+                                        primary={`Song '${value.filename}'`}
                                     />
+                                    <ListItemSecondaryAction>
+                                        <Button
+                                            onClick={()=>deleteSongHandler(value)}>
+                                            <DeleteIcon/>
+                                        </Button>
+                                        <Button onClick={() => playButtonHandleEvent(value)}>
+                                            <PlayIcon style={pause.includes(value.id)   ? {display: "none"} : {}}/>
+                                            <PauseIcon style={pause.includes(value.id) ? {} : {display: "none"}}/>
+                                        </Button>
+                                    </ListItemSecondaryAction>
                                     {/*<ListItemSecondaryAction>*/}
                                     {/*    <Button*/}
                                     {/*        onClick={customizeSongHandleClickOpen}>*/}
@@ -162,13 +267,11 @@ const CreateDiv = ({customizeSongHandleClickOpen, addSongHandleClickOpen, addedS
                 </Grid>
 
                 <Grid item xs={12} md={6}>
-
-                    <Link href="/download" variant="body2">
-                        <Button fullWidth
-                                variant="contained">
-                            Create song
-                        </Button>
-                    </Link>
+                    <Button fullWidth
+                            variant="contained"
+                            onClick={()=>createSongHandler()}>
+                        Create song
+                    </Button>
                 </Grid>
             </Grid>
         </div>);
@@ -210,16 +313,15 @@ const CustomizeDiv = ({saveCustomizeHandler, customizeSongHandleClose, customize
 
 const SongsListDiv = ({addSongsHandler, addSongHandleClose, addSongOpen, songs}) => {
     const classes = useStyles();
-    const [checked, setChecked] = React.useState([0]);
+    const [checked, setChecked] = React.useState([]);
 
     const handleToggle = value => () => {
-        const currentIndex = checked.indexOf(value);
         const newChecked = [...checked];
 
-        if (currentIndex === -1) {
+        if (newChecked.indexOf(value) === -1) {
             newChecked.push(value);
         } else {
-            newChecked.splice(currentIndex, 1);
+            newChecked.splice(newChecked.indexOf(value), 1);
         }
 
         setChecked(newChecked);
@@ -228,14 +330,7 @@ const SongsListDiv = ({addSongsHandler, addSongHandleClose, addSongOpen, songs})
     const addHandler = () => {
         addSongsHandler(checked);
         const newChecked = [...checked];
-
-        newChecked.forEach((item, index)=>{
-            if (item !== -1) {
-                newChecked.splice(index, 1);
-            }
-            setChecked(newChecked);
-        })
-
+        setChecked([]);
     };
 
     return (
@@ -255,10 +350,10 @@ const SongsListDiv = ({addSongsHandler, addSongHandleClose, addSongOpen, songs})
             </AppBar>
             <List className={classes.dialogContent}>
                 {songs.map(value => {
-                    const labelId = `checkbox-list-label-${value}`;
+                    const labelId = `checkbox-list-label-${value.mp3}`;
 
                     return (
-                        <ListItem key={value} role={undefined} dense button onClick={handleToggle(value)}>
+                        <ListItem key={value.mp3} role={undefined} dense button onClick={handleToggle(value)}>
                             <ListItemIcon>
                                 <Checkbox
                                     edge="start"
@@ -268,7 +363,7 @@ const SongsListDiv = ({addSongsHandler, addSongHandleClose, addSongOpen, songs})
                                     inputProps={{'aria-labelledby': labelId}}
                                 />
                             </ListItemIcon>
-                            <ListItemText id={labelId} primary={`Song ${value + 1}`}/>
+                            <ListItemText id={labelId} primary={`Song '${value.filename}'`}/>
                         </ListItem>
                     );
                 })

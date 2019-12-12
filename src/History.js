@@ -13,51 +13,86 @@ import Avatar from "@material-ui/core/Avatar";
 import FolderIcon from "@material-ui/core/SvgIcon/SvgIcon";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DownloadIcon from "@material-ui/icons/CloudDownload";
-import PlayIcon from '@material-ui/icons/PlayCircleFilled';
-import PauseIcon from '@material-ui/icons/PauseCircleFilled';
+    import PlayIcon from '@material-ui/icons/PlayCircleFilled';
+    import PauseIcon from '@material-ui/icons/PauseCircleFilled';
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Container from "@material-ui/core/Container";
+import { saveAs } from 'file-saver';
 
 export default class History extends Component {
 
     componentDidMount() {
-        fetch('http://127.0.0.1:8000/api/history', {
-            method: 'POST',
-            body: JSON.stringify({
-                password: this.state.newPasswordValue,
-                confirm_password: this.state.repasswordValue
-            }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
+        fetch('http://127.0.0.1:8000/api/history/', {
+            method: 'GET'
         }).then(res => {
-            console.log(res);
+            res.json().then(json=>{
+                console.log(json);
+                this.setState({songs:json});
+            });
             //this.setState({songs:res});
             return res;
         }).catch(err => err);
+
+        this.state.songs.forEach(song=>{
+            this.state.pause.push(song.composition.id);
+        })
     }
+    audio = new Audio();
 
     state = {
-        pause: [-1, -1, -1, -1],
-        songs: []
+        pause: [],
+        songs: [],
+        lastAudioIndex: -1,
+        isPlaying: 0
     };
 
-    setPause = index => {
+    setPause = value => {
 
         const newPause = [...this.state.pause];
 
-        if (newPause[index] === -1) {
-            newPause[index] = 1;
+        console.log(newPause);
+
+        if (newPause.includes(value.composition.id)) {
+            console.log("pause")
+            newPause.splice(newPause.indexOf(value.composition.id),1);
+            this.audio.pause();
+            this.setState({isPlaying: 0});
         } else {
-            newPause[index] = -1;
+            console.log("play")
+            newPause.push(value.composition.id);
+            console.log(newPause);
+            if (this.state.lastAudioIndex === value.composition.id)
+            {
+                console.log("play last index");
+                this.audio.play();
+                this.setState({isPlaying: 1});
+            }
+            else
+            {
+                console.log("play new");
+                console.log(value.composition.file);
+                this.audio.pause();
+                if (this.state.lastAudioIndex !== -1 && this.state.isPlaying === 1)
+                {
+                    console.log("delete last state");
+                    newPause.splice(newPause.indexOf(this.state.lastAudioIndex),1);
+                }
+                this.audio = new Audio(value.composition.file);
+                this.audio.play();
+                this.setState({isPlaying: 1});
+                this.setState({lastAudioIndex:value.composition.id});
+            }
         }
 
         this.setState({pause: newPause});
     };
 
-    downloadHandleEvent = index => {
-        console.log(index);
+    downloadHandleEvent = song => {
+        var FileSaver = require('file-saver');
+        FileSaver.saveAs(song.composition.file, song.composition.name + ".mp3");
     };
+
+
 
     deleteSong = index => {
         let array = [...this.state.songs]; // make a separate copy of the array
@@ -94,20 +129,19 @@ const HistoryDiv = ({deleteSongHandler, playButtonHandleEvent, downloadHandleEve
             <List>
                 {songs.map(value => {
                     return (
-                        <ListItem key={value}>
+                        <ListItem key={value.composition.id}>
                             <ListItemAvatar>
                                 <Avatar>
                                     <FolderIcon/>
                                 </Avatar>
                             </ListItemAvatar>
                             <ListItemText
-                                primary="Song"
-                                secondary='Secondary text'
+                                primary={value.composition.name}
                             />
                             <ListItemSecondaryAction>
                                 <Button onClick={() => playButtonHandleEvent(value)}>
-                                    <PlayIcon style={pause[value] !== -1 ? {} : {display: "none"}}/>
-                                    <PauseIcon style={pause[value] !== -1 ? {display: "none"} : {}}/>
+                                    <PlayIcon style={pause.includes(value.composition.id)   ? {display: "none"} : {}}/>
+                                    <PauseIcon style={pause.includes(value.composition.id) ? {} : {display: "none"}}/>
                                 </Button>
                                 <Button onClick={() => deleteSongHandler(value)}>
                                     <DeleteIcon/>
