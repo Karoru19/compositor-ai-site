@@ -40,6 +40,11 @@ export default class ManageAccount extends Component {
         newPasswordValue: ''
     };
 
+
+    componentDidMount() {
+
+    }
+
     handleChange = (fieldName, event) => {
         this.setState({[fieldName]: event.target.value});
     }
@@ -73,7 +78,7 @@ export default class ManageAccount extends Component {
             <Container component="main" maxWidth="xs">
                 <CssBaseline/>
                 <ManageDiv repassword={this.state.repasswordValue}
-                           email={this.state.emailValue}
+                           email={sessionStorage.getItem('email')}
                            currentPassword={this.state.passwordValue}
                            newpassword={this.state.newPasswordValue}
                            handleSubmitFunc={this.handleSubmit}
