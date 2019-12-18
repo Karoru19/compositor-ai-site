@@ -31,7 +31,6 @@ export default class Login extends Component {
     }
 
     handleSubmit(event) {
-        console.log("asasd");
         fetch('http://127.0.0.1:8000/api/login/', {
             method: 'POST',
             body: JSON.stringify({
@@ -42,7 +41,13 @@ export default class Login extends Component {
                 'Content-Type': 'application/json'
             }
         }).then(res => {
-            this.props.history.push('/');
+            res.json().then(json=>{
+                console.log(json);
+                sessionStorage.setItem('token',json.token);
+                sessionStorage.setItem('email',json.user.username);
+                sessionStorage.setItem('userId',json.user.id);
+                this.props.history.push('/');
+            });
         }).catch(err => {
             console.log(err);
         });
