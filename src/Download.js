@@ -10,7 +10,7 @@ import PlayIcon from '@material-ui/icons/PlayCircleFilled';
 import PauseIcon from '@material-ui/icons/PauseCircleFilled';
 import { lighten, makeStyles, withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import {Link} from "@material-ui/core";
+import { Link } from "@material-ui/core";
 
 const BorderLinearProgress = withStyles({
     root: {
@@ -51,33 +51,48 @@ const useStyles = makeStyles(theme => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
-    upload:{
-        margin: theme.spacing(2.7,0),
+    upload: {
+        margin: theme.spacing(2.7, 0),
     },
-    playGrid:{
+    playGrid: {
         display: 'flex'
     },
-    slider:{
+    slider: {
         marginTop: theme.spacing(1.5)
+    },
+    video: {
+        margin: '30px',
+        width: '100%',
+        maxWidth: '85%'
     }
 }));
 
+const rand = Math.floor(Math.random() * 30) + 1 ;
+const fileName = "Video/" + rand + ".mp4";
+
 export default function Download() {
+    const videoRef = React.createRef(null);
     const classes = useStyles();
     const [progress, setProgress] = React.useState(50);
     const [songProgress, setSongProgress] = React.useState(0);
     const [pause, setPause] = React.useState([0]);
 
-
+    console.log(fileName);
     const playButtonClick = () => {
+        console.log(fileName);
         setPause(!pause);
+        if (pause) {
+            videoRef.current.play();
+        } else {
+            videoRef.current.pause();
+        }
     };
 
     React.useEffect(() => {
         function tick() {
             // reset when reaching 100%
             setProgress(oldProgress => (oldProgress >= 100 ? 0 : oldProgress + 1));
-            if (!pause){
+            if (!pause) {
                 setSongProgress(oldProgress => (oldProgress >= 100 ? oldProgress : oldProgress + 1))
             }
         }
@@ -87,7 +102,6 @@ export default function Download() {
             clearInterval(timer);
         };
     }, []);
-
     return (
         <Grid container component="main" className={classes.root}>
             <CssBaseline />
@@ -116,6 +130,16 @@ export default function Download() {
             </Grid>
             <Grid item xs={12} sm={12} md={12} component={Paper} >
                 <CssBaseline />
+                <div>
+                    <video
+                        muted
+                        className={classes.video}
+                        loop
+                        src={fileName}
+                        type="video/mp4"
+                        ref={videoRef}
+                    />
+                </div>
                 <div className={classes.paper}>
                     <Typography component="h1" variant="h5">
                         Your song is ready!
@@ -123,7 +147,7 @@ export default function Download() {
 
                     <Link href="/home" variant="body2">
                         <Button fullWidth
-                                variant="contained">
+                            variant="contained">
                             Download!
                         </Button>
                     </Link>
