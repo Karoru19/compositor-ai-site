@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import 'typeface-roboto';
 import {makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -13,7 +13,8 @@ import './App.css';
 import {
     BrowserRouter as Router,
     Route,
-    Link
+    Link,
+    withRouter
 } from 'react-router-dom';
 import Login from './Login';
 import Register from './Register';
@@ -37,7 +38,30 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-function App() {
+export default class App extends Component {
+
+    state = {
+        refresh: '',
+    };
+
+    refresh = () => {
+        this.setState({refresh: 'yes'});
+    };
+
+    logOut = () => {
+        sessionStorage.clear();
+        this.setState({refresh: 'yes'});
+    };
+
+    render() {
+        return (
+            <AppDiv logOut={this.logOut} refresh={this.refresh}/>
+        )
+    };
+}
+
+
+const AppDiv = ({refresh, logOut}) => {
     const classes = useStyles();
 
     return (
@@ -115,6 +139,7 @@ function App() {
                             aria-haspopup="true"
                             variant="contained"
                             color="primary"
+                            onClick={logOut}
                         >
                             Logout
                         </Button>
@@ -126,7 +151,7 @@ function App() {
             </AppBar>
 
             <div className="container">
-                <Route exact path="/login" component={Login}/>
+                <Route path="/login" render={(routeProps) => <Login isAuthed={refresh} {...routeProps}/>} />
                 <Route path="/register" component={Register}/>
                 <Route path="/manage" component={ManageAccount}/>
                 <Route path="/create" component={Create}/>
@@ -136,6 +161,4 @@ function App() {
             </div>
         </Router>
     );
-}
-
-export default App;
+};

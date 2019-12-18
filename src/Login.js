@@ -46,6 +46,7 @@ export default class Login extends Component {
                 sessionStorage.setItem('token',json.token);
                 sessionStorage.setItem('email',json.user.username);
                 sessionStorage.setItem('userId',json.user.id);
+                this.props.isAuthed();
                 this.props.history.push('/');
             });
         }).catch(err => {

@@ -1,22 +1,19 @@
 import {Component} from "react";
 import React from 'react';
+import {
+    Link
+} from 'react-router-dom';
 
-
-export default class Login extends Component {
+export default class Logout extends Component {
 
     constructor(props) {
         super(props);
-
-    }
-
-    componentDidMount() {
-        sessionStorage.clear();
-        this.props.history.push("/login");
+        console.log("asdasdasd");
     }
 
     render() {
         return(
-            <div/>
+            <Link to={"/login"}/>
         )
     }
 }
