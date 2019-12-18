@@ -35,7 +35,6 @@ export default class ManageAccount extends Component {
 
     state = {
         emailValue: '',
-        passwordValue: '',
         repasswordValue: '',
         newPasswordValue: ''
     };
@@ -52,24 +51,26 @@ export default class ManageAccount extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
 
-        if (this.state.passwordValue !== this.state.repasswordValue) {
+        if (this.state.newPasswordValue !== this.state.repasswordValue) {
             alert('Type correct password');
-            this.setState({passwordValue: ''});
             this.setState({repasswordValue: ''});
             this.setState({newPasswordValue: ''});
         }
 
-        fetch('http://localhost:52070/api/password-change', {
+        fetch('http://127.0.0.1:8000/api/password-change/', {
             method: 'POST',
                 body: JSON.stringify({
                 password: this.state.newPasswordValue,
                 confirm_password: this.state.repasswordValue
             }),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'Token ' + sessionStorage.getItem('token')
             }
         }).then(res => {
-            return res;
+            this.setState({repasswordValue: ''});
+            this.setState({newPasswordValue: ''});
+            alert('Success');
         }).catch(err => err);
     }
 
@@ -79,7 +80,6 @@ export default class ManageAccount extends Component {
                 <CssBaseline/>
                 <ManageDiv repassword={this.state.repasswordValue}
                            email={sessionStorage.getItem('email')}
-                           currentPassword={this.state.passwordValue}
                            newpassword={this.state.newPasswordValue}
                            handleSubmitFunc={this.handleSubmit}
                            handleValueChangeFunc={this.handleChange}
@@ -89,7 +89,7 @@ export default class ManageAccount extends Component {
     }
 }
 
-const ManageDiv = ({handleSubmitFunc, handleValueChangeFunc, email, currentPassword, newpassword, repassword}) => {
+const ManageDiv = ({handleSubmitFunc, handleValueChangeFunc, email, newpassword, repassword}) => {
     const classes = useStyles();
     return <div className={classes.paper}>
         <Typography component="h1" variant="h5">
@@ -108,20 +108,7 @@ const ManageDiv = ({handleSubmitFunc, handleValueChangeFunc, email, currentPassw
                         value={email}
                         onChange={event => handleValueChangeFunc("emailValue", event)}
                         autoComplete="email"
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        variant="outlined"
-                        required
-                        fullWidth
-                        name="currentpassword"
-                        label="Current Password"
-                        type="password"
-                        id="currentpassword"
-                        value={currentPassword}
-                        onChange={event => handleValueChangeFunc("passwordValue", event)}
-                        autoComplete="current-password"
+                        disabled={true}
                     />
                 </Grid>
                 <Grid item xs={12}>
