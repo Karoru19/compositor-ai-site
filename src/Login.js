@@ -95,10 +95,6 @@ const LoginDiv = ({handleSubmitFunc, handleValueChangeFunc}) => {
                 autoComplete="current-password"
                 onChange={event => handleValueChangeFunc("passwordValue", event)}
             />
-            <FormControlLabel
-                control={<Checkbox value="remember" color="primary"/>}
-                label="Remember me"
-            />
             <Button
                 type="submit"
                 fullWidth
@@ -127,6 +123,9 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        padding: theme.spacing(5),
+        borderRadius: '25px',
+        backgroundColor: 'white',
     },
     avatar: {
         margin: theme.spacing(1),

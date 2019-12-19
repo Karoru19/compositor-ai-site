@@ -188,7 +188,14 @@ export default class Create extends Component {
             }
         }).then(res => {
             if (res.ok){
+
+                sessionStorage.setItem('compositionUrl', 'http://127.0.0.1:8000/media/Sandstorm.mp3');
                 this.props.history.push('/download');
+                //
+                // res.json().then(json=>{
+                //     sessionStorage.setItem('compositionUrl', json.url);
+                //     this.props.history.push('/download');
+                // })
             }
         }).catch(err => err);
     };
@@ -340,10 +347,10 @@ const SongsListDiv = ({addSongsHandler, addSongHandleClose, addSongOpen, songs})
                     <IconButton edge="start" color="inherit" onClick={addSongHandleClose} aria-label="close">
                         <CloseIcon/>
                     </IconButton>
-                    <Typography variant="h6" className={classes.title}>
-                        Song
+                    <Typography variant="h5" >
+                        Choose songs
                     </Typography>
-                    <Button autoFocus color="inherit" onClick={addHandler}>
+                    <Button style={{marginLeft: '20px'}} autoFocus color="inherit" onClick={addHandler}>
                         Add
                     </Button>
                 </Toolbar>

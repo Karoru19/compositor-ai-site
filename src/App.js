@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import 'typeface-roboto';
-import {makeStyles} from '@material-ui/core/styles';
+import {createMuiTheme, MuiThemeProvider, makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -24,17 +24,34 @@ import Create from "./Create";
 import Download from "./Download";
 import History from "./History";
 import Logout from "./Logout";
+import MainPage from "./MainPage";
+
+const colortheme = createMuiTheme({
+    palette: {
+        primary: { main: "#fff", contrastText: "#03a9f4" },
+        secondary: { main: "#03a9f4", contrastText: "#fff" },
+    }
+});
 
 const useStyles = makeStyles(theme => ({
     root: {
+        textdecoration:'none',
+        '& > *': {
+            margin: theme.spacing(1),
+        },
         flexGrow: 1,
+        backgroundColor: 'transparent'
     },
     menuButton: {
-        marginRight: theme.spacing(2),
+        textDecoration:'none',
+        marginRight: theme.spacing(5),
+        textcolor: '#fff'
     },
     title: {
         flexGrow: 1,
     },
+    bar:{
+    }
 }));
 
 
@@ -66,17 +83,20 @@ const AppDiv = ({refresh, logOut}) => {
 
     return (
         <Router>
-            <AppBar position="static">
-                <Toolbar>
+            <MuiThemeProvider theme={colortheme}>
+            <AppBar position="static" className={classes.root}>
+                <Toolbar style={{textDecoration:'none'}}>
                     <Typography variant="h6" className={classes.title}>
-                        Chill Music Generator
+                        <Link to={"/mainpage"} style={{ textDecoration: 'none', color:'#fff' }}>
+                            Chill Music Generator
+                        </Link>
                     </Typography>
+
                     {sessionStorage.getItem('token') == null &&
-                    <Link to="/login">
+                    <Link to="/login"  className={classes.menuButton}>
                         <Button
                             aria-controls="customized-menu"
                             aria-haspopup="true"
-                            variant="contained"
                             color="primary"
                         >
                             Login
@@ -84,11 +104,10 @@ const AppDiv = ({refresh, logOut}) => {
                     </Link>
                     }
                     {sessionStorage.getItem('token') == null &&
-                    <Link to="/register">
+                    <Link to="/register" className={classes.menuButton}>
                         <Button
                             aria-controls="customized-menu"
                             aria-haspopup="true"
-                            variant="contained"
                             color="primary"
                         >
                             Register
@@ -96,11 +115,10 @@ const AppDiv = ({refresh, logOut}) => {
                     </Link>
                     }
                     {sessionStorage.getItem('token') != null &&
-                    <Link to="/manage">
+                    <Link to="/manage" className={classes.menuButton}>
                         <Button
                             aria-controls="customized-menu"
                             aria-haspopup="true"
-                            variant="contained"
                             color="primary"
                         >
                             Manage
@@ -108,11 +126,10 @@ const AppDiv = ({refresh, logOut}) => {
                     </Link>
                     }
                     {sessionStorage.getItem('token') != null &&
-                    <Link to="/create">
+                    <Link to="/create" className={classes.menuButton}>
                         <Button
                             aria-controls="customized-menu"
                             aria-haspopup="true"
-                            variant="contained"
                             color="primary"
                         >
                             Create
@@ -120,11 +137,10 @@ const AppDiv = ({refresh, logOut}) => {
                     </Link>
                     }
                     {sessionStorage.getItem('token') != null &&
-                    <Link to="/history">
+                    <Link to="/history" className={classes.menuButton}>
                         <Button
                             aria-controls="customized-menu"
                             aria-haspopup="true"
-                            variant="contained"
                             color="primary"
                         >
                             History
@@ -133,11 +149,11 @@ const AppDiv = ({refresh, logOut}) => {
                     }
 
                     {sessionStorage.getItem('token') != null &&
-                    <Link to={"/logout"}>
+                    <Link to={"/logout"} className={classes.menuButton}>
                         <Button
                             aria-controls="customized-menu"
                             aria-haspopup="true"
-                            variant="contained"
+                            variant="text"
                             color="primary"
                             onClick={logOut}
                         >
@@ -151,7 +167,8 @@ const AppDiv = ({refresh, logOut}) => {
             </AppBar>
 
             <div className="container">
-                <Route path="/login" render={(routeProps) => <Login isAuthed={refresh} {...routeProps}/>} />
+                <Route path="/mainpage" component={MainPage}/>
+                <Route path="/login" render={(routeProps) => <Login isAuthed={refresh} {...routeProps}/>}/>
                 <Route path="/register" component={Register}/>
                 <Route path="/manage" component={ManageAccount}/>
                 <Route path="/create" component={Create}/>
@@ -159,6 +176,7 @@ const AppDiv = ({refresh, logOut}) => {
                 <Route path="/history" component={History}/>
                 <Route path="/logout" component={Logout}/>
             </div>
+            </MuiThemeProvider>
         </Router>
     );
 };

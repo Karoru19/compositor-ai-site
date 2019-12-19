@@ -9,19 +9,42 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import PlayIcon from '@material-ui/icons/PlayCircleFilled';
 import PauseIcon from '@material-ui/icons/PauseCircleFilled';
 import { lighten, makeStyles, withStyles } from '@material-ui/core/styles';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import { Link } from "@material-ui/core";
 
-const BorderLinearProgress = withStyles({
-    root: {
-        height: 10,
-        backgroundColor: lighten('#ff6c5c', 0.5),
-    },
-    bar: {
-        borderRadius: 20,
-        backgroundColor: '#ff6c5c',
-    },
-})(LinearProgress);
+
+const rand = Math.floor(Math.random() * 30) + 1 ;
+const fileName = "Video/" + rand + ".mp4";
+
+export default function Download() {
+    const videoRef = React.createRef(null);
+    console.log()
+    const audio = new Audio(sessionStorage.getItem('compositionUrl')).play();
+    const classes = useStyles();
+
+    function downloadHandler() {
+
+        var FileSaver = require('file-saver');
+        FileSaver.saveAs(sessionStorage.getItem('compositionUrl'), sessionStorage.getItem('compositionName') + ".mp3");
+    }
+
+    return (
+        <Grid container component="main" className={classes.root}>
+            <Button onClick={downloadHandler} variant={"contained"}  style={{ textAlign:'center', justifyContent: 'center', alignSelf: 'center', margin: 'auto', marginTop: '20px', marginBottom: '20px'}}>
+                Download
+            </Button>
+            <video
+                autoPlay={true}
+                muted
+                className={classes.video}
+                loop
+                src={fileName}
+                type="video/mp4"
+                ref={videoRef}
+            />
+        </Grid>
+    );
+}
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -61,99 +84,8 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(1.5)
     },
     video: {
-        margin: '30px',
         width: '100%',
-        maxWidth: '85%'
+        height: '100%',
+        margin: theme.spacing(0,15)
     }
 }));
-
-const rand = Math.floor(Math.random() * 30) + 1 ;
-const fileName = "Video/" + rand + ".mp4";
-
-export default function Download() {
-    const videoRef = React.createRef(null);
-    const classes = useStyles();
-    const [progress, setProgress] = React.useState(50);
-    const [songProgress, setSongProgress] = React.useState(0);
-    const [pause, setPause] = React.useState([0]);
-
-    console.log(fileName);
-    const playButtonClick = () => {
-        console.log(fileName);
-        setPause(!pause);
-        if (pause) {
-            videoRef.current.play();
-        } else {
-            videoRef.current.pause();
-        }
-    };
-
-    React.useEffect(() => {
-        function tick() {
-            // reset when reaching 100%
-            setProgress(oldProgress => (oldProgress >= 100 ? 0 : oldProgress + 1));
-            if (!pause) {
-                setSongProgress(oldProgress => (oldProgress >= 100 ? oldProgress : oldProgress + 1))
-            }
-        }
-
-        const timer = setInterval(tick, 20);
-        return () => {
-            clearInterval(timer);
-        };
-    }, []);
-    return (
-        <Grid container component="main" className={classes.root}>
-            <CssBaseline />
-            <Grid item xs={12} sm={12} md={12} component={Paper} >
-                <div className={classes.paper}>
-                    <Typography component="h1" variant="h5">
-                        Downloading...
-                    </Typography>
-                    <CircularProgress variant="determinate" value={progress} />
-                </div>
-            </Grid>
-            <Grid className={classes.playGrid}  item xs={12} sm={12} md={12} component={Paper} >
-                <CssBaseline />
-                <Button item xs={2} sm={2} md={2} onClick={playButtonClick}>
-                    <PlayIcon style={pause ? {} : {display: "none"}}/>
-                    <PauseIcon style={pause ? {display: "none"} : {}}/>
-                </Button>
-                <Grid  item xs={10} sm={10} md={10}
-                       className={classes.slider}>
-                    <BorderLinearProgress
-                        variant="determinate"
-                        color="secondary"
-                        value={songProgress}
-                    />
-                </Grid>
-            </Grid>
-            <Grid item xs={12} sm={12} md={12} component={Paper} >
-                <CssBaseline />
-                <div>
-                    <video
-                        muted
-                        className={classes.video}
-                        loop
-                        src={fileName}
-                        type="video/mp4"
-                        ref={videoRef}
-                    />
-                </div>
-                <div className={classes.paper}>
-                    <Typography component="h1" variant="h5">
-                        Your song is ready!
-                    </Typography>
-
-                    <Link href="/home" variant="body2">
-                        <Button fullWidth
-                            variant="contained">
-                            Download!
-                        </Button>
-                    </Link>
-                </div>
-            </Grid>
-
-        </Grid>
-    );
-}
