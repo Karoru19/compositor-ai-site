@@ -2,16 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0f8061eb-71ee-4afc-b401-a4cb0013a175" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/MainPage.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bgimg.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Create.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Create.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Download.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Download.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Login.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ManageAccount.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ManageAccount.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Register.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Register.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/History.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/History.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

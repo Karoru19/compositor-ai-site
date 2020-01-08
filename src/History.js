@@ -21,6 +21,8 @@ import { saveAs } from 'file-saver';
 
 export default class History extends Component {
 
+    audio = new Audio();
+
     componentDidMount() {
         fetch('http://127.0.0.1:8000/api/history/', {
             method: 'GET'
@@ -37,7 +39,10 @@ export default class History extends Component {
             this.state.pause.push(song.composition.id);
         })
     }
-    audio = new Audio();
+
+    componentWillUnmount() {
+        this.audio.pause();
+    }
 
     state = {
         pause: [],

@@ -52,6 +52,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default class Create extends Component {
+    audio = new Audio();
 
     componentDidMount() {
         fetch('http://127.0.0.1:8000/api/song/', {
@@ -70,7 +71,11 @@ export default class Create extends Component {
             this.state.pause.push(song.id);
         })
     }
-    audio = new Audio();
+
+    componentWillUnmount() {
+        this.audio.pause();
+    }
+
 
     state = {
         addSongOpen: false,
@@ -107,14 +112,14 @@ export default class Create extends Component {
             else
             {
                 console.log("play new");
-                console.log(value.mp3);
+                console.log(value.ogg);
                 this.audio.pause();
                 if (this.state.lastAudioIndex !== -1 && this.state.isPlaying === 1)
                 {
                     console.log("delete last state");
                     newPause.splice(newPause.indexOf(this.state.lastAudioIndex),1);
                 }
-                this.audio = new Audio(value.mp3);
+                this.audio = new Audio(value.ogg);
                 this.audio.play();
                 this.setState({isPlaying: 1});
                 this.setState({lastAudioIndex:value.id});
