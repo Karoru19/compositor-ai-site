@@ -189,18 +189,19 @@ export default class Create extends Component {
                 name:"song_" + new Date().toISOString()
             }),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                Authorization: `Token ${sessionStorage.getItem('token')}` 
             }
         }).then(res => {
             if (res.ok){
 
-                sessionStorage.setItem('compositionUrl', 'http://127.0.0.1:8000/media/Sandstorm.mp3');
-                this.props.history.push('/download');
-                //
-                // res.json().then(json=>{
-                //     sessionStorage.setItem('compositionUrl', json.url);
-                //     this.props.history.push('/download');
-                // })
+                // sessionStorage.setItem('compositionUrl', 'http://127.0.0.1:8000/media/Sandstorm.mp3');
+                // this.props.history.push('/download');
+                
+                res.json().then(json=>{
+                    sessionStorage.setItem('compositionUrl', json.url);
+                    this.props.history.push('/download');
+                })
             }
         }).catch(err => err);
     };
